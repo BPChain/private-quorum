@@ -22,29 +22,17 @@ RUN wget -q https://storage.googleapis.com/golang/${GOREL} && tar -xvzf ${GOREL}
 RUN git clone https://github.com/jpmorganchase/quorum.git
 RUN cd quorum >/dev/null && git checkout tags/v1.1.0 && make all && cp build/bin/geth /usr/local/bin/ && cp build/bin/bootnode /usr/local/bin/bootnode
 
-#COPY entrypoint.sh entrypoint.sh
-#RUN chmod +x entrypoint.sh && chown quorum entrypoint.sh && chown -R quorum /home/quorum
-#USER quorum
-#VOLUME ["/home/quorum/config"]
-#EXPOSE 8545
-#EXPOSE 46656
-
-#FROM alpine
-#FROM node:slim
-
 FROM debian:stable-slim
 
 RUN apt-get -qq update -y
 RUN apt-get upgrade -y
 RUN apt-get update -qq && apt-get install -qq -y git bash python3 musl-dev gcc python3-dev python3-pip dnsutils nano curl
-# RUN apk add --update git bash python3 musl-dev gcc python3-dev py3-netifaces nodejs nodejs-npm nano
-RUN pip3 install web3 websocket-client pyyaml
+
+RUN pip3 install web3 websocket-client pyyaml python_logger
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -y nodejs
 
-COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/bin/ /root/files/
-
 COPY .ethash /root/.ethash
 COPY files /root/files
 RUN cd root/files && npm install
@@ -53,5 +41,3 @@ RUN chmod +x /root/files/start_bootstrap.sh
 RUN chmod +rwx /root/files/start_eth_contract_deployer.sh
 
 RUN chmod 777 /root/files/geth
-
-# ENTRYPOINT ["/home/quorum/entrypoint.sh"]
