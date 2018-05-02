@@ -15,7 +15,19 @@ import yaml
 from web3 import Web3, HTTPProvider
 from websocket import create_connection, WebSocket
 
-from .python_logger import set_up_logging
+import logging
+from logging import Logger
+
+
+def set_up_logging(name) -> Logger:
+    new_logger = logging.getLogger(name)
+    console = logging.StreamHandler()
+    formatter = logging.Formatter('%(levelname)s - %(message)s | In: %(module)s at: %(lineno)d')
+    console.setLevel(logging.INFO)
+    console.setFormatter(formatter)
+    new_logger.setLevel(logging.INFO)
+    new_logger.addHandler(console)
+    return new_logger
 
 # pylint: disable=global-statement
 
@@ -35,7 +47,7 @@ def connect_to_blockchain():
 
 def start_mining(web3):
     LOG.info('Start mining')
-    web3.miner.start(1)
+    # web3.miner.start(1)
 
 def unlock_account(web3):
     web3.personal.unlockAccount(web3.eth.accounts[0], "123", 0)
