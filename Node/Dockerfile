@@ -41,3 +41,4 @@ RUN chmod +x /root/files/start_bootstrap.sh
 RUN chmod +rwx /root/files/start_eth_contract_deployer.sh
 
 RUN chmod 777 /root/files/geth
+RUN chmod 777 /root/files/bootnode

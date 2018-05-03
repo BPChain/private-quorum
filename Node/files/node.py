@@ -41,16 +41,18 @@ def connect_to_blockchain():
                              request_kwargs={'timeout': 120}))
     while not web3.isConnected():
         time.sleep(1)
-    LOG.info('Connected to ethereum chain')
+    LOG.info('Connected to quorum chain')
     return web3
 
 
 def start_mining(web3):
     LOG.info('Start mining')
+    web3.quorum.makeBlock()
     # web3.miner.start(1)
 
 def unlock_account(web3):
-    web3.personal.unlockAccount(web3.eth.accounts[0], "123", 0)
+    LOG.info('Unlock Account')
+    # web3.personal.unlockAccount(web3.eth.accounts[0], "123", 0)
 
 def retrieve_new_blocks_since(number_of_last_sent_block, web3):
     """Gets the newly mined blocks since last send cycle"""
